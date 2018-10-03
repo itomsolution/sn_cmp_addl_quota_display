@@ -37,11 +37,10 @@ Refer to the Additional Quotas Display_HowToSteps_v1.0_vNN.pdf document provided
 
 ###### Examples:
 ###### When a 5th quota is added.
-<src img=“images/OneAddlQuotaDisplay.png”>
+<img src="images/OneAddlQuotaDisplay.png" width="200">
 
 ###### When a 6th and 7th quotas are added.
-<src img=“images/ThreeAddlQuotasDisplay.png”>
-
+<img src="images/ThreeAddlQuotasDisplay.png" width="200">
 
 ## Disclaimer
 This is not an officially supported solution by ServiceNow.
