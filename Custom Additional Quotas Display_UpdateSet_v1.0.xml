@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2018-10-02 23:22:57">
+<sys_remote_update_set action="INSERT_OR_UPDATE">
+<application display_value="Cloud Management Platform">80d50579eb203200979aa5115206fedd</application>
+<application_name>Cloud Management Platform</application_name>
+<application_scope>sn_cmp</application_scope>
+<application_version>1.0.0</application_version>
+<collisions/>
+<commit_date/>
+<deleted/>
+<description>Update set for custom solution to display additional quotas on the Quota widget of the Cloud User Portal welcome page if custom quotas are added beyond the 4 OOB quotas.  </description>
+<inserted/>
+<name>Custom Additional Quotas Display</name>
+<origin_sys_id/>
+<parent display_value=""/>
+<release_date/>
+<remote_base_update_set display_value=""/>
+<remote_parent_id/>
+<remote_sys_id>869c0cabdbf46b00099bdc965e961944</remote_sys_id>
+<state>loaded</state>
+<summary/>
+<sys_class_name>sys_remote_update_set</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2018-10-02 23:22:56</sys_created_on>
+<sys_id>09fd4cebdbf46b00099bdc965e961901</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2018-10-02 23:22:56</sys_updated_on>
+<update_set display_value=""/>
+<update_source display_value=""/>
+<updated/>
+</sys_remote_update_set>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Cloud Management Platform">80d50579eb203200979aa5115206fedd</application>
+<category>customer</category>
+<comments/>
+<name>sp_widget_70e33ec80b222200eff7ef9bb4673a3a</name>
+<payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sp_widget"&gt;&lt;sp_widget action="INSERT_OR_UPDATE"&gt;&lt;category/&gt;&lt;client_script&gt;&lt;![CDATA[function($scope, spModal){
+ var c = this;
+
+ c.onWidget = function(widgetId, widgetInput) {
+  spModal.open({
+   title: "Quota Details",
+   buttons: [],
+   size: 'lg',
+   widget: widgetId
+  }).then(function(){
+  })      
+ }
+}]]&gt;&lt;/client_script&gt;&lt;controller_as&gt;c&lt;/controller_as&gt;&lt;css&gt;.highcharts-yaxis-grid .highcharts-grid-line {
+      display: none;
+      }
+
+      .panel-body {
+      padding: 2px;
+      min-height: 295px;
+      }
+
+      #viewAllQuota {
+      background: none;
+      color: #1570bd;
+      border: none;
+      padding: 0;
+      }
+
+      button:focus {
+      outline:2px solid #1b75bb; 
+      }&lt;/css&gt;&lt;data_table&gt;sp_instance&lt;/data_table&gt;&lt;demo_data/&gt;&lt;description/&gt;&lt;docs/&gt;&lt;field_list/&gt;&lt;has_preview&gt;false&lt;/has_preview&gt;&lt;id&gt;cloud-quota-chart&lt;/id&gt;&lt;internal&gt;false&lt;/internal&gt;&lt;link&gt;&lt;![CDATA[function (scope,el,attrs,ctrl) {
+ $(document).ready(function(){
+  resize_window();
+  totalQuota = ctrl.data.result.Total;
+  //drawQuotaChart();
+	drawQuotaChart(totalQuota);
+ });
+
+ $(window).resize(function(){
+  resize_window();
+ });
+
+
+ function resize_window(){
+  var panel_height = ($(document).height()- 415) + 'px';
+  $(el).find('.panel-body').css('height',panel_height);
+ }
+
+ //function drawQuotaChart(){
+ function drawQuotaChart(totalQuota) {
+  var gaugeOptions = {
+
+   accessibility: {
+    enabled: true 
+   },
+
+   chart: {
+    type: 'solidgauge',
+    description: 'Charts showing quota consumption for VM, vCPU,Storage Volume and Network resources'
+   },
+
+   title: 'Quota Consumption Chart',
+
+   pane: {
+    center: ['50%', '80%'],
+    size: '100%',
+    startAngle: -90,
+    endAngle: 90,
+    background: {
+     backgroundColor: (Highcharts.theme &amp;&amp; Highcharts.theme.background2) || '#EEE',
+     innerRadius: '65%',
+     outerRadius: '100%',
+     shape: 'arc'
+    }
+   },
+
+   tooltip: {
+    enabled: false
+   },
+
+   // the value axis
+   yAxis: {
+    stops: [
+     [0.1, '#55BF3B'], // green
+     [0.5, '#DDDF0D'], // yellow
+     [0.9, '#DF5353'] // red
+    ],
+    lineWidth: 0,
+    tickPixelInterval: 400,
+    minorTickInterval: null,
+    tickAmount: 2,
+
+    title: {
+     y: 60
+    },
+    labels: { 
+     y: 15,
+     distance: -13
+    }
+   },
+
+   plotOptions: {
+    solidgauge: {
+     innerRadius: '65%',
+     dataLabels: {
+      y: 10,
+      borderWidth: 0,
+      useHTML: true
+     }
+    }
+   }
+  };
+
+  // The gauge
+/*
+	 $('#container1').highcharts(Highcharts.merge(gaugeOptions, {
+   yAxis: {
+    labels: {
+     formatter: function(){
+      return this.value;
+     }            
+    },
+    min: 0,
+    max: parseInt(totalQuota[1].User_Limit),
+    tickPositioner:  function() {
+     return [0,parseInt(totalQuota[1].User_Limit)];
+    },
+    title: {
+     text: totalQuota[1].Type
+    }
+   },
+
+   credits: {
+    enabled: false
+   },
+
+   series: [{
+    name: totalQuota[1].Type,
+    data: [parseInt(totalQuota[1].User_Used)],
+    dataLabels: {
+     format: '&lt;div style="text-align:center"&gt;&lt;span style="font-size:14px;color:' +
+     ((Highcharts.theme &amp;&amp; Highcharts.theme.contrastTextColor) || 'black') + '"&gt;{y}&lt;/span&gt;&lt;br/&gt;' +
+     '&lt;span style="font-size:12px;color:silver"&gt;Used&lt;/span&gt;&lt;/div&gt;'
+    }
+   }]
+  }));
+	
+  $('#container2').highcharts(Highcharts.merge(gaugeOptions, {
+   yAxis: {
+    labels: {
+     formatter: function(){
+      return this.value;
+     }            
+    },
+    min: 0,
+    max: parseInt(totalQuota[0].User_Limit) ,
+    tickPositioner:  function() {
+     return [0,parseInt(totalQuota[0].User_Limit)];
+    },
+    title: {
+     text: totalQuota[0].Type
+    }
+   },
+
+   credits: {
+    enabled: false
+   },
+
+   series: [{
+    name: totalQuota[0].Type,
+    data: [parseInt(totalQuota[0].User_Used)],
+    dataLabels: {
+     format: '&lt;div style="text-align:center"&gt;&lt;span style="font-size:14px;color:' +
+     ((Highcharts.theme &amp;&amp; Highcharts.theme.contrastTextColor) || 'black') + '"&gt;{y}&lt;/span&gt;&lt;br/&gt;' +
+     '&lt;span style="font-size:12px;color:silver"&gt;Used&lt;/span&gt;&lt;/div&gt;'
+    }
+   }]
+  }));
+
+  $('#container3').highcharts(Highcharts.merge(gaugeOptions, {
+   yAxis: {
+    labels: {
+     formatter: function(){
+      return this.value;
+     }            
+    },
+    min: 0,
+    max: parseFloat(totalQuota[3].User_Limit),
+    tickPositioner:  function() {
+     return [0,parseFloat(totalQuota[3].User_Limit)];
+    },
+    title: {
+     text: totalQuota[3].Type
+    }
+   },
+
+   credits: {
+    enabled: false
+   },
+
+   series: [{
+    name: totalQuota[3].Type,
+    data: [parseFloat(totalQuota[3].User_Used)],
+    dataLabels: {
+     format: '&lt;div style="text-align:center"&gt;&lt;span style="font-size:14px;color:' +
+     ((Highcharts.theme &amp;&amp; Highcharts.theme.contrastTextColor) || 'black') + '"&gt;{y}&lt;/span&gt;&lt;br/&gt;' +
+     '&lt;span style="font-size:12px;color:silver"&gt;GB Used&lt;/span&gt;&lt;/div&gt;'
+    }
+   }]
+  }));
+
+  $('#container4').highcharts(Highcharts.merge(gaugeOptions, {
+   yAxis: {
+    labels: {
+     formatter: function(){
+      return this.value;
+     }            
+    },
+    min: 0,
+    max: parseInt(totalQuota[2].User_Limit),
+    tickPositioner:  function() {
+     return [0,parseInt(totalQuota[2].User_Limit)];
+    },
+    title: {
+     text: totalQuota[2].Type
+    }
+   },
+
+   credits: {
+    enabled: false
+   },
+
+   series: [{
+    name: totalQuota[2].Type,
+    data: [parseInt(totalQuota[2].User_Used)],
+    dataLabels: {
+     format: '&lt;div style="text-align:center"&gt;&lt;span style="font-size:14px;color:' +
+     ((Highcharts.theme &amp;&amp; Highcharts.theme.contrastTextColor) || 'black') + '"&gt;{y}&lt;/span&gt;&lt;br/&gt;' +
+     '&lt;span style="font-size:12px;color:silver"&gt;Used&lt;/span&gt;&lt;/div&gt;'
+    }
+   }]
+  }));
+	 
+  $('#container5').highcharts(Highcharts.merge(gaugeOptions, {
+   yAxis: {
+    labels: {
+     formatter: function(){
+      return this.value;
+     }            
+    },
+    min: 0,
+    max: parseInt(totalQuota[4].User_Limit),
+    tickPositioner:  function() {
+     return [0,parseInt(totalQuota[4].User_Limit)];
+    },
+    title: {
+     text: totalQuota[4].Type
+    }
+   },
+
+   credits: {
+    enabled: false
+   },
+
+   series: [{
+    name: totalQuota[4].Type,
+    data: [parseInt(totalQuota[4].User_Used)],
+    dataLabels: {
+     format: '&lt;div style="text-align:center"&gt;&lt;span style="font-size:14px;color:' +
+     ((Highcharts.theme &amp;&amp; Highcharts.theme.contrastTextColor) || 'black') + '"&gt;{y}&lt;/span&gt;&lt;br/&gt;' +
+     '&lt;span style="font-size:12px;color:silver"&gt;Used&lt;/span&gt;&lt;/div&gt;'
+    }
+   }]
+  }));
+	*/
+	 
+  for (var i in totalQuota) {
+	//for (var i=0; i &lt; 6; i++) {
+	 $('#container'+i).highcharts(Highcharts.merge(gaugeOptions, {
+   yAxis: {
+    labels: {
+     formatter: function(){
+      return this.value;
+     }            
+    },
+    min: 0,
+    max: parseInt(totalQuota[i].User_Limit),
+    tickPositioner:  function() {
+     return [0,parseInt(totalQuota[i].User_Limit)];
+    },
+    title: {
+     text: totalQuota[i].Type
+    }
+   },
+
+   credits: {
+    enabled: false
+   },
+
+   series: [{
+    name: totalQuota[i].Type,
+    data: [parseInt(totalQuota[i].User_Used)],
+    dataLabels: {
+     format: '&lt;div style="text-align:center"&gt;&lt;span style="font-size:14px;color:' +
+     ((Highcharts.theme &amp;&amp; Highcharts.theme.contrastTextColor) || 'black') + '"&gt;{y}&lt;/span&gt;&lt;br/&gt;' +
+     '&lt;span style="font-size:12px;color:silver"&gt;Used&lt;/span&gt;&lt;/div&gt;'
+    }
+   }]
+  }));
+	}
+	 
+ }
+}]]&gt;&lt;/link&gt;&lt;name&gt;Cloud Quota Chart&lt;/name&gt;&lt;option_schema/&gt;&lt;public&gt;false&lt;/public&gt;&lt;roles/&gt;&lt;script&gt;&lt;![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */
+ data.userName = gs.getUserName();
+
+ var user = new sn_cmp_api.QuotaServiceScript();
+ data.result = global.JSON.parse(user.getQuotaUser(data.userName));
+})();]]&gt;&lt;/script&gt;&lt;servicenow&gt;false&lt;/servicenow&gt;&lt;sys_class_name&gt;sp_widget&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2016-10-14 05:34:26&lt;/sys_created_on&gt;&lt;sys_id&gt;70e33ec80b222200eff7ef9bb4673a3a&lt;/sys_id&gt;&lt;sys_mod_count&gt;811&lt;/sys_mod_count&gt;&lt;sys_name&gt;Cloud Quota Chart&lt;/sys_name&gt;&lt;sys_package display_value="Cloud Management Platform" source="sn_cmp"&gt;80d50579eb203200979aa5115206fedd&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Cloud Management Platform"&gt;80d50579eb203200979aa5115206fedd&lt;/sys_scope&gt;&lt;sys_update_name&gt;sp_widget_70e33ec80b222200eff7ef9bb4673a3a&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2018-10-02 23:21:32&lt;/sys_updated_on&gt;&lt;template&gt;&lt;![CDATA[&lt;div class="panel b widget-container"&gt;
+  &lt;div class="panel-heading"&gt;
+    &lt;h4 class="panel-title"&gt;${Quota}&lt;/h4&gt;
+  &lt;/div&gt;
+  &lt;div class="panel-body"&gt;
+    &lt;div class="row first"&gt;
+      &lt;div class="col-md-6"&gt;
+        &lt;div id="container0" style="height:130px;"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="col-md-6"&gt;
+        &lt;div id="container1" style="height:130px;"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="row"&gt;
+      &lt;div class="col-md-6"&gt;
+        &lt;div id="container2" style="height:130px;"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="col-md-6"&gt;
+        &lt;div id="container3" style="height:130px;"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="row"&gt;
+      &lt;div class="col-md-6"&gt;
+        &lt;div id="container4" style="height:130px;"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="col-md-6"&gt;
+        &lt;div id="container5" style="height:130px;"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class="panel-footer"&gt;
+    &lt;button id="viewAllQuota" class="pull-right" aria-haspopup="true" aria-label="${Click to open quota details popup}" ng-click="c.onWidget('cloud-quota-chart-popup')"&gt;${View All}&lt;/button&gt;
+    &amp;nbsp;
+  &lt;/div&gt;
+&lt;/div&gt;]]&gt;&lt;/template&gt;&lt;/sp_widget&gt;&lt;/record_update&gt;</payload>
+<payload_hash>1128145004</payload_hash>
+<remote_update_set display_value="Custom Additional Quotas Display">09fd4cebdbf46b00099bdc965e961901</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2018-10-02 23:22:56</sys_created_on>
+<sys_id>cdfd4cebdbf46b00099bdc965e961901</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_recorded_at>16637162eec0000001</sys_recorded_at>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2018-10-02 23:22:56</sys_updated_on>
+<table/>
+<target_name>Cloud Quota Chart</target_name>
+<type>Widget</type>
+<update_domain>global</update_domain>
+<update_guid>50ad04eb47f46b0084e54cfae5316ff2</update_guid>
+<update_guid_history>50ad04eb47f46b0084e54cfae5316ff2:1128145004,4b098ce7fef46b00870082f7d758d73f:-924349184,a026b25a85735b004398b5960dc69b64:1128145004,2864721aeb735b00bbfedf310aa56d6f:-2091432212,1f24bed653735b005d9267e67e109359:-703053267,18d3bad60d735b0053946bb665f8f1ce:-2091432212,4573bad6ae735b00dec5e72340d1558c:-1591135220,d87c3a06537b1b0063e3fe03f0fce5f8:-2039050299,ab4cf606687b1b00bd3b8a30d8bc0dee:-804986012,9da396ce96f71b0012c0236a84591bc7:-2039050299,0d631ace56f71b00cae47adca30edec7:2132319530,56531acef7f71b002d12ca274833738a:1051409130,583396cebaf71b009b7df12bea6fdc8c:1807938261,d6329e8ec7f71b001164d36a416b867a:-247948200,85dfc24eaff71b00be6b03dcd58ce5fa:-2039050299,35c3394e57b71b0043731115a7557d5a:1264501169,5f23b14e5db71b00ba27ba0a79cd840a:-741159270,1af0f9cac4b71b00fff78b919bc855e3:1264501169,bfa0f9caf3b71b0032dab5b021842a6d:-834265218,5580358aa4b71b00e2fa57f98408366c:-1359794673,b00eed4a8eb71b00632b01befc97d5fe:1202219837,2adda18a1ab71b002abfe4f7dc3debb3:-235763431,1f8dad4ad6b71b0028f589e31c271d7f:-1550103118,437ded4af0b71b0019cf319c50b22101:2073272273,096dad4a71b71b0072d817d3c75deb2e:1237611587,d73d2d4aa3b71b005c57b75a8ab0b871:573141811,c52da94a26b71b006ffc9d09ff8ead61:1915623486,010de14a4bb71b005777a9aae726f45f:-1403924472,42dc254ac2b71b00232f69e0f8048926:-315636365,ea5ce14a0bb71b00ca028ffc49f2e838:2006622988,884ce14aa8b71b00c6cbd840b5198b00:1707039008,200c214ae8b71b00140cf88337062cbb:-2017368891,c179e9c620b71b00287a864abce59d09:1285126800,3049a9c6c7b71b00bcb40ba37f00e7c5:-1510843567,811929c65fb71b0086caf6c8b20070f8:-1031531910,7b09e5c665b71b009bc24efe776d3603:17560719,dae8a5c64fb71b00da03c9b2587385b4:-807338214,d2c8e1c613b71b007390d00430bd858b:-1325586224,036821c606b71b00ebb1534b14c5f3bb:-1411068846,ce182d86a1b71b00f898dfc1051a2084:1242230614,61b76d864eb71b002915c0ca1e7dd574:398709012,5387614649b71b00c2cf2ed92a8bc64e:-199782282,a827e58670b71b00c10a26a3f547fec5:1459241526,4270518a1e771b0009964201f618f8d6:-241321850,b65d450a13771b0073efafce22e4621d:-40465852,df3d450aeb771b002519e4b5a3df8056:-1321691397,832d450a30771b0013c58b05b1c2b614:-40465852,b3f8cd46a0771b00a5db8834bdb6dbb7:-241321850,a3e88d467e771b00143c1a10609b3c22:-1245177709,32d80d46ab771b004a9dea63a713c0c4:1191229065,4ac80d464f771b00b72f8020ee098754:750008522,1ea8894675771b00865d12a5554e91d7:-637642348,7a984946da771b00342155b0f4514eac:-241321850,3d8889465d771b00ab6caa88f7aad7d0:-1497694670,587849464c771b00f2b7bff67f7f5ba5:-1686441010,9a28854652771b002ba9cb4b6a874ed9:-241321850,fc1885468b771b005e6cc34fe88be3ae:1193174614,9508490657771b009f7e11cacaf49c0e:1613226140,1227c90637771b00d63dcbda6563036c:-241321850,7517c906b7771b00998295070259a8b8:912053384,35f8f04e44371b00b1b6f7181be323cb:-241321850,7a44b88adb371b00f6a06507ad61f000:-1264604864,5b34788a92371b00f4ede10715ae70f9:-1843475745,6fe8a4062e371b00e7d20022afb60715:-1264604864,f8a7ec82f8371b00ca6179671364b966:-366948022,fd766082ad371b00f3c944e8144b5d8b:-1674927332,ca85a84271371b00d95446620e70ab06:-2026190646,4e85a8428c371b009893ff01cb30a104:-1878630512</update_guid_history>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+</unload>
