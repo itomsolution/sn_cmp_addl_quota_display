@@ -33,7 +33,7 @@ Filename: Custom Additional Quotas Display_UpdateSet_vNN.xml
 
 ## Documentation
 
-Refer to the Additional Quotas Display_HowToSteps_v1.0_vNN.pdf document provided as additional how-to reference on manually configuring this solution.
+Refer to the Additional Quotas Display_HowToSteps_vNN.pdf document as additional how-to reference on manually configuring this solution.
 
 ###### Examples:
 ###### When a 5th quota is added.
