@@ -44,15 +44,3 @@ Refer to the Additional Quotas Display_HowToSteps_vNN.pdf document as additional
 
 ## Disclaimer
 This is not an officially supported solution by ServiceNow.
-
-
-## Authors
-
-* Annie Chan
-
-
-## Maintainers/Sponsors
-
-Current maintainers:
-
-* [Annie Chan](https://github.com/sn-achan)
